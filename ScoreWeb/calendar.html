@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>F1 Calendar</title>
+    <link rel="stylesheet" href="calendar.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+
+    <nav>
+        <ul>
+          <li><a href="index.html"><img id='bild' src="logo/Logo.png" alt=""></a></li>
+          <li><a href="calendar.html">Schedule</a></li>
+          <li><a href="#">Results</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Championship &#9662;</a>
+            <div class="dropdown-content">
+              <a href="standings.html">Drivers</a>
+              <a href="Cstandings.html">Constructors</a>
+            </div>
+          </li>                    
+          <li><a href="#">Teams</a></li>
+          <li><a href="drivers.html">Races</a></li>
+        </ul>
+    </nav>
+      
+
+    <h1>F1 Calendar</h1>
+    <div id="races"></div>
+
+    <script>
+fetch('races.json')
+  .then(response => response.json())
+  .then(data => {
+    data.forEach(race => {
+      const raceElem = document.createElement('a'); // create an anchor element
+      raceElem.href = `race.html?id=${race.id}`; // set the link to the race page, passing the race ID as a parameter
+      raceElem.classList.add('race');
+
+      const flagElem = document.createElement('img');
+      flagElem.src = race.image;
+      flagElem.alt = `${race.image}`;
+      raceElem.appendChild(flagElem);
+
+      const timeElem = document.createElement('p');
+      timeElem.textContent = `${race.date_range[0]} - ${race.race_time}`;
+      raceElem.appendChild(timeElem);
+
+      const placeElem = document.createElement('p');
+      placeElem.textContent = `${race.race}`;
+      raceElem.appendChild(placeElem);
+
+      const dateElem = document.createElement('p');
+      dateElem.textContent = `Date: ${race.date_range.join(' - ')}`;
+      raceElem.appendChild(dateElem);
+
+      document.getElementById('races').appendChild(raceElem);
+    });
+  });
+
+
+
+        
+    </script>
+  </body>
+</html>

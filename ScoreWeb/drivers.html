@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="drivers.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <nav>
+        <ul>
+          <li><a href="index.html"><img id='bild' src="logo/Logo.png" alt=""></a></li>
+          <li><a href="calendar.html">Schedule</a></li>
+          <li><a href="#">Results</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Championship &#9662;</a>
+            <div class="dropdown-content">
+              <a href="standings.html">Drivers</a>
+              <a href="Cstandings.html">Constructors</a>
+            </div>
+          </li>
+          
+          <li><a href="#">Teams</a></li>
+          <li><a href="drivers.html">Races</a></li>
+        </ul>
+    </nav>
+      
+
+<h1>F1 Results</h1>
+<form id="results-form">
+  <label for="year">Year:</label>
+  <input type="number" id="year" name="year"><br>
+
+  <label for="round">Round Number:</label>
+  <input type="number" id="round" name="round"><br>
+
+  <label for="driver">Driver Name:</label>
+  <input type="text" id="driver" name="driver"><br>
+
+  <button type="submit">Search</button>
+</form>
+
+<div id="results"></div>
+
+<script>
+async function getRaceResults(year, roundNum) {
+  const url = `https://ergast.com/api/f1/${year}/${roundNum}/results.json`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.MRData.RaceTable.Races[0];
+}
+
+async function getDriverResults(year, driverName) {
+  const url = `https://ergast.com/api/f1/${year}/drivers/${driverName}/results.json`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.MRData.RaceTable.Races;
+}
+
+const resultsForm = document.getElementById('results-form');
+const resultsDiv = document.getElementById('results');
+
+resultsForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const year = document.getElementById('year').value;
+  const roundNum = document.getElementById('round').value;
+  const driverName = document.getElementById('driver').value;
+
+  const raceResults = await getRaceResults(year, roundNum);
+  const driverResults = await getDriverResults(year, driverName);
+
+  resultsDiv.innerHTML = `
+    <h2>Race information for ${raceResults.raceName}: </h2>
+    
+    <p>Circuit: ${raceResults.Circuit.circuitName}</p>
+    <p>Location: ${raceResults.Circuit.Location.locality}, ${raceResults.Circuit.Location.country}</p>
+    <p>Date: ${raceResults.date}</p>
+    <p>Time: ${raceResults.time}</p>
+
+    <h2>Results for ${raceResults.raceName}:</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Position</th>
+          <th>Driver</th>
+          <th>Nationality</th>
+          <th>Constructor</th>
+          <th>Laps</th>
+          <th>Grid</th>
+          <th>Time</th>
+          <th>Points</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${raceResults.Results.map(result => `
+          <tr>
+            <td>${result.position}</td>
+            <td>${result.Driver.givenName} ${result.Driver.familyName}</td>
+            <td>${result.Driver.nationality}</td>
+            <td>${result.Constructor.name}</td>
+            <td>${result.laps}</td>
+            <td>${result.grid}</td>
+            <td>${result.Time}</td>
+            <td>${result.points}</td>
+            <td>${result.status}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+
+    `;
+  });
+</script>
+
+</body>
+</html>

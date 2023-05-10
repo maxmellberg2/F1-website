@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="standings.css">
+
+    <script>
+
+fetch('https://ergast.com/api/f1/2023/constructorStandings.json')
+  .then(response => response.json())
+  .then(data => {
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    const headerRow = document.createElement('tr');
+    const positionHeader = document.createElement('th');
+    positionHeader.textContent = 'Position';
+    headerRow.appendChild(positionHeader);
+    const constructorHeader = document.createElement('th');
+    constructorHeader.textContent = 'Constructor';
+    headerRow.appendChild(constructorHeader);
+    const pointsHeader = document.createElement('th');
+    pointsHeader.textContent = 'Points';
+    headerRow.appendChild(pointsHeader);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    for (const constructor of data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings) {
+      const row = document.createElement('tr');
+      const positionCell = document.createElement('td');
+      positionCell.textContent = constructor.position;
+      row.appendChild(positionCell);
+      const constructorCell = document.createElement('td');
+      constructorCell.textContent = constructor.Constructor.name;
+      row.appendChild(constructorCell);
+      const pointsCell = document.createElement('td');
+      pointsCell.textContent = constructor.points;
+      row.appendChild(pointsCell);
+      tbody.appendChild(row);
+    }
+    table.appendChild(tbody);
+    document.body.appendChild(table);
+  });
+
+    </script>
+
+</head>
+<body>
+    
+    <nav>
+        <ul>
+          <li><a href="index.html"><img id='bild' src="logo/Logo.png" alt=""></a></li>
+          <li><a href="calendar.html">Schedule</a></li>
+          <li><a href="#">Results</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropbtn">Championship &#9662;</a>
+            <div class="dropdown-content">
+                <a href="standings.html">Drivers</a>
+                <a href="Cstandings.html">Constructors</a>
+            </div>
+          </li>          
+          <li><a href="#">Teams</a></li>
+          <li><a href="drivers.html">Races</a></li>
+        </ul>
+    </nav>
+
+</body>
+</html>

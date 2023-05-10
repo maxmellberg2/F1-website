@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race</title>
+    <link rel="stylesheet" href="race.css">
+    <script> const params = new Proxy(new URLSearchParams(window.location.search), { 
+
+       get: (searchParams, prop) => searchParams.get(prop), 
+      
+     });
+      
+    let value = params.id; 
+  </script>
+</head>
+<body> 
+
+
+  <nav>
+    <ul>
+      <li><a href="index.html"><img id='bild' src="logo/Logo.png" alt=""></a></li>
+      <li><a href="calendar.html">Schedule</a></li>
+      <li><a href="drivers.html">Results</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropbtn">Championship &#9662;</a>
+        <div class="dropdown-content">
+          <a href="standings.html">Drivers</a>
+          <a href="Cstandings.html">Constructors</a>
+        </div>
+      </li>
+      
+      <li><a href="#">Teams</a></li>
+      <li><a href="drivers.html">Races</a></li>
+    </ul>
+  </nav>
+
+<div class="race"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="race-img">
+<img class="race-image" src="${item.image}" alt="">
+<img class="race-image" src="${item.image2}" alt="">
+</div>
+
+
+
+
+
+
+<script>
+
+function loadSingle(id){
+
+const xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'races.json', true);
+
+
+xhr.onload = () => {
+races = JSON.parse(xhr.responseText);
+
+loadRace(races, id)
+
+ };
+
+xhr.send();
+
+}
+
+
+function loadRace(races, id){
+  console.log(id)
+
+
+let output = "";
+
+     for(let item of races){
+        if (item.id == id){    
+        let stars = "";
+        
+            output += `
+         
+            <div class="race-info">
+  <h2 class="race-name">${item.race}</h2>
+  <img class="race-image" src="${item.image}" alt="">
+  <img class="race-image" src="${item.image2}" alt="">
+  <div class="race-dates">
+    <p class="race-date-range">${item.date_range}</p>
+    <p class="race-date-time">${item.race_time}</p>
+  </div>
+  <div class="race-schedule">
+    <h3 class="schedule-heading">Schedule (GMT)</h3>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Event</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fp1-date">${item.fp1_date}</td>
+          <td class="fp1-time">${item.fp1_time}</td>
+          <td>Free Practice 1</td>
+        </tr>
+        <tr>
+          <td class="fp2-date">${item.fp2_date}</td>
+          <td class="fp2-time">${item.fp2_time}</td>
+          <td>Free Practice 2</td>
+        </tr>
+        <tr>
+          <td class="fp3-date">${item.fp3_date}</td>
+          <td class="fp3-time">${item.fp3_time}</td>
+          <td>Free Practice 3</td>
+        </tr>
+        <tr>
+          <td class="qualifying-date">${item.qualifying_date}</td>
+          <td class="qualifying-time">${item.qualifying_time}</td>
+          <td>Qualifying</td>
+        </tr>
+        <tr>
+          <td class="race-date">${item.race_date}</td>
+          <td class="race-time">${item.race_time}</td>
+          <td>Race</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="race-location">
+    <h3 class="location-heading">Location</h3>
+    <p class="location-info">${item.location}</p>
+    <p class="circuit-name">${item.circuit}</p>
+  </div>
+</div>
+
+            `;
+        };
+        document.querySelector('.race').innerHTML = output;
+}}
+
+
+  document.addEventListener("DOMContentLoaded", function(event){
+    loadSingle(value)
+  }
+  
+  )
+</script>
+    
+</body>
+</html>
